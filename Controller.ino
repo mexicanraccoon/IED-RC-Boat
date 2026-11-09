@@ -23,11 +23,11 @@ const int rightSWPin = 3; //designates the pin that reads the button input for l
 const int statusLED = 6; //designates the pin that the status LED will be connected to.
 
 
-int statusLEDcount = 0;
+int statusLEDcount = 0; //creating a counter varaible for the flashing status LED
 
 void setup() { //defines function that is run exactly once upon arduino power-up or reset
   // put your setup code here, to run once:
-  pinMode(statusLED, OUTPUT); //
+  pinMode(statusLED, OUTPUT); //setting the status LED pin as an output
   
   Serial.begin(9600); //initializes the serial communication (sets the transmission speed rate in bits per second for the serial port (USB))
 
@@ -51,33 +51,33 @@ void setup() { //defines function that is run exactly once upon arduino power-up
 void loop() {
   // put your main code here, to run repeatedly:
 
-  if ((statusLEDcount) >= 5) {
+  if ((statusLEDcount) >= 5) { //logic to determine if the status LED is on or off
     digitalWrite(statusLED, HIGH);
   }else {
     digitalWrite(statusLED, LOW);
   }
 
-  int rawLeftY = analogRead(A1);
-  int rawRightY = analogRead(A0);
+  int rawLeftY = analogRead(A1);//read data from A1 and store it as a variable for processing
+  int rawRightY = analogRead(A0);//read data from A0 and store it as a variable for processing
 
 
-  int leftMapped = map(rawLeftY, 0, 1023, -255, 255);
-  int rightMapped = map(rawRightY, 0, 1023, -255, 255);
+  int leftMapped = map(rawLeftY, 0, 1023, -255, 255);//map A1 data from 0-1023 to -255-255 for negative and positive motor movement
+  int rightMapped = map(rawRightY, 0, 1023, -255, 255);//map A0 data from 0-1023 to -255-255 for negative and positive motor movement
 
-  if (abs(leftMapped) < 25) leftMapped = 0;
-  if (abs(rightMapped) <25) rightMapped = 0;
+  if (abs(leftMapped) < 25) leftMapped = 0;//creating a deadzone to prevent a twitchy motor when idle
+  if (abs(rightMapped) < 25) rightMapped = 0;//creating a deadzone to prevent a twitchy motor when idle
 
-  txData.motorLeftSpeed = leftMapped;
-  txData.motorRightSpeed = rightMapped;
+  txData.motorLeftSpeed = leftMapped;//set the transmitted left motor power value 
+  txData.motorRightSpeed = rightMapped;//set the transmitted right motor power value 
 
-  txData.leftButton = (digitalRead(leftSWPin) == LOW);
-  txData.rightButton = (digitalRead(rightSWPin) == LOW);
+  txData.leftButton = (digitalRead(leftSWPin) == LOW);//sets left button value to true if the button is pressed
+  txData.rightButton = (digitalRead(rightSWPin) == LOW);//sets rightt button value to true if the button is pressed
 
-  radio.write(&txData, sizeof(PacketData));
+  radio.write(&txData, sizeof(PacketData));//transmits data
 
-  statusLEDcount = (statusLEDcount + 1);
+  statusLEDcount = (statusLEDcount + 1);//increase counter
 
-  if (statusLEDcount > 10) statusLEDcount = 0;
+  if (statusLEDcount > 10) statusLEDcount = 0;//reset counter if value is too high
   
   delay(20);
   
