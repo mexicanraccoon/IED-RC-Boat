@@ -28,6 +28,8 @@ int statusLEDcount = 0; //creating a counter varaible for the flashing status LE
 void setup() { //defines function that is run exactly once upon arduino power-up or reset
   // put your setup code here, to run once:
   pinMode(statusLED, OUTPUT); //setting the status LED pin as an output
+  pinMode(leftSWPin, INPUT_PULLUP); //enable the internal pull-up resistor so the button pin reads HIGH when released (the buttons are active-low)
+  pinMode(rightSWPin, INPUT_PULLUP); //same for the right stick button
   
   Serial.begin(9600); //initializes the serial communication (sets the transmission speed rate in bits per second for the serial port (USB))
 
