@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="980" viewBox="0 0 1400 980" xmlns:c2pa="http://c2pa.org/manifest">
+  <style>
+    text { font-family: Arial, Helvetica, sans-serif; fill: #222; }
+    .title { font-size: 22px; font-weight: bold; }
+    .sub { font-size: 13px; fill: #555; }
+    .h { font-size: 14px; font-weight: bold; }
+    .p { font-size: 12px; }
+    .wl { font-size: 10px; font-weight: bold; }
+    .n { font-size: 12px; fill: #333; }
+    .box { fill: #f1f4f7; stroke: #37474f; stroke-width: 2; }
+    .ard { fill: #e3f0fa; stroke: #1c4e80; stroke-width: 2.5; }
+    .w { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+
+  <rect width="1400" height="980" fill="#ffffff"/>
+  <text x="700" y="38" text-anchor="middle" class="title">Wiring diagram: Arduino + nRF24L01 + microSD + MPU6050 + L298N</text>
+  <text x="700" y="62" text-anchor="middle" class="sub">Pin numbers match rth_robot.ino (Arduino Uno / Nano, 5 V logic)</text>
+
+  <!-- ================= ARDUINO ================= -->
+  <rect x="500" y="100" width="260" height="730" rx="12" class="ard"/>
+  <text x="630" y="127" text-anchor="middle" class="h">Arduino Uno / Nano</text>
+
+  <!-- Arduino left power stubs -->
+  <path d="M500,155 H470" class="w" stroke="#d32f2f"/>
+  <path d="M500,180 H470" class="w" stroke="#d32f2f"/>
+  <path d="M500,205 H470" class="w" stroke="#111"/>
+  <text x="464" y="159" text-anchor="end" class="p">3V3</text>
+  <text x="464" y="184" text-anchor="end" class="p">5V</text>
+  <text x="464" y="209" text-anchor="end" class="p">GND</text>
+
+  <!-- Arduino left signal labels -->
+  <text x="512" y="244" class="p">D9</text>
+  <text x="512" y="279" class="p">D10</text>
+  <text x="512" y="314" class="p">D13</text>
+  <text x="512" y="349" class="p">D11</text>
+  <text x="512" y="384" class="p">D12</text>
+  <text x="512" y="519" class="p">D8</text>
+  <text x="512" y="749" class="p">A4</text>
+  <text x="512" y="779" class="p">A5</text>
+
+  <!-- Arduino right power stubs -->
+  <path d="M760,155 H790" class="w" stroke="#d32f2f"/>
+  <path d="M760,185 H790" class="w" stroke="#111"/>
+  <text x="796" y="159" class="p">VIN</text>
+  <text x="796" y="189" class="p">GND</text>
+
+  <!-- Arduino right signal labels -->
+  <text x="748" y="249" text-anchor="end" class="p">D5 (PWM)</text>
+  <text x="748" y="284" text-anchor="end" class="p">D2</text>
+  <text x="748" y="319" text-anchor="end" class="p">D3</text>
+  <text x="748" y="354" text-anchor="end" class="p">D4</text>
+  <text x="748" y="389" text-anchor="end" class="p">D7</text>
+  <text x="748" y="424" text-anchor="end" class="p">D6 (PWM)</text>
+  <text x="748" y="544" text-anchor="end" class="p">A0</text>
+
+  <!-- ================= nRF24L01 ================= -->
+  <rect x="100" y="130" width="200" height="290" rx="8" class="box"/>
+  <text x="200" y="152" text-anchor="middle" class="h">nRF24L01</text>
+  <path d="M100,175 H68" class="w" stroke="#d32f2f"/>
+  <path d="M100,205 H68" class="w" stroke="#111"/>
+  <text x="62" y="179" text-anchor="end" class="p">3V3</text>
+  <text x="62" y="209" text-anchor="end" class="p">GND</text>
+  <text x="108" y="179" class="p">VCC</text>
+  <text x="108" y="209" class="p">GND</text>
+  <text x="292" y="244" text-anchor="end" class="p">CE</text>
+  <text x="292" y="279" text-anchor="end" class="p">CSN</text>
+  <text x="292" y="314" text-anchor="end" class="p">SCK</text>
+  <text x="292" y="349" text-anchor="end" class="p">MOSI</text>
+  <text x="292" y="384" text-anchor="end" class="p">MISO</text>
+  <text x="200" y="408" text-anchor="middle" class="n">IRQ: not connected</text>
+
+  <!-- ================= microSD ================= -->
+  <rect x="100" y="440" width="200" height="200" rx="8" class="box"/>
+  <text x="200" y="462" text-anchor="middle" class="h">microSD module</text>
+  <path d="M100,490 H68" class="w" stroke="#d32f2f"/>
+  <path d="M100,520 H68" class="w" stroke="#111"/>
+  <text x="62" y="494" text-anchor="end" class="p">5V</text>
+  <text x="62" y="524" text-anchor="end" class="p">GND</text>
+  <text x="108" y="494" class="p">VCC</text>
+  <text x="108" y="524" class="p">GND</text>
+  <text x="292" y="519" text-anchor="end" class="p">CS</text>
+  <text x="292" y="549" text-anchor="end" class="p">SCK</text>
+  <text x="292" y="579" text-anchor="end" class="p">MOSI</text>
+  <text x="292" y="609" text-anchor="end" class="p">MISO</text>
+
+  <!-- ================= MPU6050 ================= -->
+  <rect x="100" y="670" width="200" height="140" rx="8" class="box"/>
+  <text x="200" y="692" text-anchor="middle" class="h">MPU6050</text>
+  <path d="M100,725 H68" class="w" stroke="#d32f2f"/>
+  <path d="M100,755 H68" class="w" stroke="#111"/>
+  <text x="62" y="729" text-anchor="end" class="p">3V3</text>
+  <text x="62" y="759" text-anchor="end" class="p">GND</text>
+  <text x="108" y="729" class="p">VCC</text>
+  <text x="108" y="759" class="p">GND</text>
+  <text x="292" y="749" text-anchor="end" class="p">SDA</text>
+  <text x="292" y="779" text-anchor="end" class="p">SCL</text>
+  <text x="200" y="802" text-anchor="middle" class="n">INT / AD0: not connected</text>
+
+  <!-- ================= LEFT-SIDE WIRES ================= -->
+  <!-- CE (purple) -->
+  <path d="M300,240 H500" class="w" stroke="#8e44ad"/>
+  <!-- CSN (magenta) -->
+  <path d="M300,275 H500" class="w" stroke="#c2255c"/>
+  <!-- SCK (orange) shared with SD -->
+  <path d="M300,310 H500" class="w" stroke="#e07b00"/>
+  <path d="M340,310 V545 H300" class="w" stroke="#e07b00"/>
+  <!-- MOSI (green) shared with SD -->
+  <path d="M300,345 H500" class="w" stroke="#2e9e44"/>
+  <path d="M370,345 V575 H300" class="w" stroke="#2e9e44"/>
+  <!-- MISO (blue) shared with SD -->
+  <path d="M300,380 H500" class="w" stroke="#1f77d4"/>
+  <path d="M400,380 V605 H300" class="w" stroke="#1f77d4"/>
+  <!-- SD CS (gold) -->
+  <path d="M300,515 H500" class="w" stroke="#a67c00"/>
+  <!-- I2C -->
+  <path d="M300,745 H500" class="w" stroke="#0b9a9a"/>
+  <path d="M300,775 H500" class="w" stroke="#6b4fd1"/>
+
+  <!-- junction dots -->
+  <circle cx="340" cy="310" r="4.5" fill="#e07b00"/>
+  <circle cx="370" cy="345" r="4.5" fill="#2e9e44"/>
+  <circle cx="400" cy="380" r="4.5" fill="#1f77d4"/>
+
+  <!-- left wire name labels -->
+  <text x="455" y="234" text-anchor="middle" class="wl" style="fill:#8e44ad">CE</text>
+  <text x="455" y="269" text-anchor="middle" class="wl" style="fill:#c2255c">CSN</text>
+  <text x="455" y="304" text-anchor="middle" class="wl" style="fill:#e07b00">SCK</text>
+  <text x="455" y="339" text-anchor="middle" class="wl" style="fill:#2e9e44">MOSI</text>
+  <text x="455" y="374" text-anchor="middle" class="wl" style="fill:#1f77d4">MISO</text>
+  <text x="455" y="509" text-anchor="middle" class="wl" style="fill:#a67c00">SD CS</text>
+  <text x="455" y="739" text-anchor="middle" class="wl" style="fill:#0b9a9a">SDA</text>
+  <text x="455" y="769" text-anchor="middle" class="wl" style="fill:#6b4fd1">SCL</text>
+
+  <!-- ================= L298N ================= -->
+  <rect x="930" y="120" width="230" height="350" rx="8" class="box"/>
+  <text x="1045" y="145" text-anchor="middle" class="h">L298N motor driver</text>
+  <text x="942" y="249" class="p">ENA</text>
+  <text x="942" y="284" class="p">IN1</text>
+  <text x="942" y="319" class="p">IN2</text>
+  <text x="942" y="354" class="p">IN3</text>
+  <text x="942" y="389" class="p">IN4</text>
+  <text x="942" y="424" class="p">ENB</text>
+  <text x="1152" y="254" text-anchor="end" class="p">OUT1</text>
+  <text x="1152" y="294" text-anchor="end" class="p">OUT2</text>
+  <text x="1152" y="384" text-anchor="end" class="p">OUT3</text>
+  <text x="1152" y="424" text-anchor="end" class="p">OUT4</text>
+  <text x="1045" y="320" text-anchor="middle" class="n">Remove ENA / ENB</text>
+  <text x="1045" y="336" text-anchor="middle" class="n">jumpers</text>
+  <text x="980" y="456" text-anchor="middle" class="p">12V</text>
+  <text x="1050" y="456" text-anchor="middle" class="p">GND</text>
+  <text x="1120" y="456" text-anchor="middle" class="p" style="fill:#888">5V (unused)</text>
+
+  <!-- Arduino to L298N control wires -->
+  <path d="M760,245 H930" class="w" stroke="#e8590c"/>
+  <path d="M760,280 H930" class="w" stroke="#546e7a"/>
+  <path d="M760,315 H930" class="w" stroke="#546e7a"/>
+  <path d="M760,350 H930" class="w" stroke="#546e7a"/>
+  <path d="M760,385 H930" class="w" stroke="#546e7a"/>
+  <path d="M760,420 H930" class="w" stroke="#e8590c"/>
+  <text x="845" y="239" text-anchor="middle" class="wl" style="fill:#e8590c">ENA</text>
+  <text x="845" y="274" text-anchor="middle" class="wl" style="fill:#546e7a">IN1</text>
+  <text x="845" y="309" text-anchor="middle" class="wl" style="fill:#546e7a">IN2</text>
+  <text x="845" y="344" text-anchor="middle" class="wl" style="fill:#546e7a">IN3</text>
+  <text x="845" y="379" text-anchor="middle" class="wl" style="fill:#546e7a">IN4</text>
+  <text x="845" y="414" text-anchor="middle" class="wl" style="fill:#e8590c">ENB</text>
+
+  <!-- ================= MOTORS ================= -->
+  <rect x="1240" y="225" width="120" height="90" rx="8" class="box"/>
+  <text x="1300" y="275" text-anchor="middle" class="h">Left motor</text>
+  <rect x="1240" y="355" width="120" height="90" rx="8" class="box"/>
+  <text x="1300" y="405" text-anchor="middle" class="h">Right motor</text>
+  <path d="M1160,250 H1240" class="w" stroke="#222"/>
+  <path d="M1160,290 H1240" class="w" stroke="#222"/>
+  <path d="M1160,380 H1240" class="w" stroke="#222"/>
+  <path d="M1160,420 H1240" class="w" stroke="#222"/>
+
+  <!-- ================= BATTERY ================= -->
+  <rect x="930" y="580" width="230" height="80" rx="8" class="box"/>
+  <text x="1045" y="632" text-anchor="middle" class="h">Battery 7–12 V</text>
+  <text x="980" y="600" text-anchor="middle" class="h" style="fill:#d32f2f">+</text>
+  <text x="1050" y="600" text-anchor="middle" class="h">−</text>
+  <path d="M980,580 V470" class="w" stroke="#d32f2f"/>
+  <path d="M1050,580 V470" class="w" stroke="#111"/>
+  <text x="1170" y="605" class="n">Battery + also feeds Arduino VIN</text>
+  <text x="1170" y="625" class="n">Battery − joins the common GND</text>
+
+  <!-- ================= LED ================= -->
+  <path d="M760,540 H790" class="w" stroke="#d6336c"/>
+  <rect x="790" y="532" width="50" height="16" fill="#fff" stroke="#222" stroke-width="2"/>
+  <text x="815" y="523" text-anchor="middle" class="p">220 Ω</text>
+  <path d="M840,540 H865" class="w" stroke="#d6336c"/>
+  <polygon points="865,528 865,552 890,540" fill="#ffd43b" stroke="#222" stroke-width="2"/>
+  <path d="M890,527 V553" stroke="#222" stroke-width="2.5"/>
+  <path d="M890,540 H905 V568" class="w" stroke="#111"/>
+  <path d="M895,568 H915" stroke="#111" stroke-width="2.5"/>
+  <path d="M898,574 H912" stroke="#111" stroke-width="2.5"/>
+  <path d="M901,580 H909" stroke="#111" stroke-width="2.5"/>
+  <text x="878" y="506" text-anchor="middle" class="h">Activity LED</text>
+
+  <!-- ================= NOTES ================= -->
+  <text x="100" y="870" class="h">Notes</text>
+  <text x="100" y="892" class="n">1. The nRF24L01 runs on 3.3 V only. Add a 10 µF capacitor across its VCC and GND, close to the module.</text>
+  <text x="100" y="912" class="n">2. Join all grounds: Arduino, nRF24L01, microSD, MPU6050, L298N, battery, and the LED cathode.</text>
+  <text x="100" y="932" class="n">3. The nRF24L01 and microSD share the SPI pins D11, D12 and D13; each has its own chip select (D10 and D8).</text>
+  <text x="100" y="952" class="n">4. Use a microSD module with an onboard level shifter and regulator, powered from the Arduino 5 V pin.</text>
+  <text x="100" y="972" class="n">Red = positive power, black = ground. Match power pins by their labels (3V3, 5V, GND).</text>
+<metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo0NDdhNDQ3Ny04MzQwLTQwMzUtYjE2Yy1mNzc4OTM5NDVmOGQAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaABYDCUkdIT36lCyks2umlMAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDplZGZlYmViNS01MTMyLTRmNzgtOTJiYS0yMGRhNmQ0NmQxYzVscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoYzoJ7sADqwtTpEFwsDS4NAAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgg+orKpn29hrpB9zhnTpTErO+ADUArB9KeUSgMCSKIFmakZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaKSkQWc0e0b1yE/LlN76ahsAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYINET0+djd5CxVe5xv2h4ezGg8zxASGe832j9h2/zjteAZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GS4GZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjQ0N2E0NDc3LTgzNDAtNDAzNS1iMTZjLWY3Nzg5Mzk0NWY4ZC9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjU2ZDg3MzFkLWU0MTctNDdiNC1iYTNmLWE4YTI4ZDg1NmJmZnJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCD6isqmfb2GukH3OGdOlMSs74ANQCsH0p5RKAwJIogWZqJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggD8CPERQqZUC+oqBKGf8Cq8iCgEfO6kQsFOW4n4qAVSKiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggmzjAmDir01q+ZRfr+BIM99dZv/K9DLSj1gYZqdg86MV0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQJalFL8OGMMeScb567PSXtmj33YWFwwGU+ooPmRwjhStFSvUs19JMEtSW574jS7d441GQove4Gp138BCwIihAvE=</c2pa:manifest></metadata></svg>
