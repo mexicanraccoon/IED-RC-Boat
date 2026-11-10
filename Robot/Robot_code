@@ -1,0 +1,276 @@
+#include <SPI.h>
+#include <SD.h>
+#include <Wire.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+#include <MPU6050_light.h>
+
+// ---------------- Hardware Pins ----------------
+RF24 radio(9, 10);               // CE, CSN
+const int SD_CS_PIN = 8;
+const int LED_PIN   = A0;        // Activity LED (use a ~220 ohm resistor to GND)
+MPU6050 mpu(Wire);
+
+const uint64_t pipeAddress = 0xE8E8F0F0E1LL;
+
+// Motor Pins
+const int IN1 = 2, IN2 = 3, ENA = 5;
+const int IN3 = 4, IN4 = 7, ENB = 6;
+
+// ---------------- Tuning Constants ----------------
+const float SPEED_SCALE        = 0.05;   // distance units per PWM unit per second (tune!)
+const float ARRIVAL_RADIUS     = 15.0;   // RTH stops inside this distance
+const int   DEADBAND           = 40;     // PWM below this doesn't move the robot (tune!)
+const unsigned long LINK_TIMEOUT_MS = 500;   // no packet for this long = link lost
+const float HEADING_SIGN       = 1.0;    // set to -1.0 if turning left makes angle decrease
+const float PIVOT_THRESHOLD    = 0.5;    // rad (~29 deg): pivot in place above this error
+const int   PIVOT_SPEED        = 130;
+const int   RTH_BASE_SPEED     = 140;
+const unsigned long LOG_INTERVAL_MS   = 100;
+const unsigned long FLUSH_INTERVAL_MS = 1000;
+const unsigned long LED_PULSE_MS      = 40;   // LED on-time per received packet
+const int   MIN_FREE_RAM       = 200;    // bytes; LED only blinks if at least this much is free
+const char* LOG_FILE           = "vec.csv";
+
+struct PacketData {
+  int motorLeftSpeed;
+  int motorRightSpeed;
+  bool leftButton;
+  bool rightButton;
+};
+PacketData rxData = {0, 0, false, false};   // must match transmitter exactly
+
+// ---------------- State ----------------
+float posX = 0.0, posY = 0.0;
+float headingRad = 0.0;
+float headingOffsetDeg = 0.0;
+bool rthActive = false;
+bool lastLeftBtn = false;
+bool lastRightBtn = false;
+
+bool gotFirstPacket = false;
+bool failsafeTriggered = false;
+unsigned long lastPacketTime = 0;
+
+bool sdOk = false;
+File logFile;
+
+unsigned long lastUpdate = 0;
+unsigned long lastLog = 0;
+unsigned long lastFlush = 0;
+unsigned long ledOffTime = 0;
+
+// ---------------- Helpers ----------------
+int freeRam() {
+#if defined(__AVR__)
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int)&v - (__brkval == 0 ? (int)&__heap_start : (int)__brkval);
+#else
+  return 32767;   // non-AVR boards: assume plenty
+#endif
+}
+
+void fatalBlink(int count) {
+  // Halt with motors off, blinking the LED 'count' times per cycle
+  driveMotors(0, 0);
+  while (true) {
+    for (int i = 0; i < count; i++) {
+      digitalWrite(LED_PIN, HIGH); delay(150);
+      digitalWrite(LED_PIN, LOW);  delay(150);
+    }
+    delay(1000);
+  }
+}
+
+bool openLog() {
+  bool isNew = !SD.exists(LOG_FILE);
+  logFile = SD.open(LOG_FILE, FILE_WRITE);
+  if (!logFile) return false;
+  if (isNew) {
+    logFile.println(F("t,ax,ay,az,gx,gy,gz,x,y"));
+    logFile.flush();
+  }
+  return true;
+}
+
+void resetLog() {
+  if (!sdOk) return;
+  if (logFile) logFile.close();
+  if (SD.exists(LOG_FILE)) SD.remove(LOG_FILE);
+  sdOk = openLog();   // recreates file and writes header
+}
+
+void updateLed(unsigned long now) {
+  // Blink on each received packet, but only if there's free RAM left
+  bool memoryOk = freeRam() >= MIN_FREE_RAM;
+  bool on = memoryOk && (long)(ledOffTime - now) > 0;
+  digitalWrite(LED_PIN, on ? HIGH : LOW);
+}
+
+// ---------------- Setup ----------------
+void setup() {
+  pinMode(IN1, OUTPUT); pinMode(IN2, OUTPUT); pinMode(ENA, OUTPUT);
+  pinMode(IN3, OUTPUT); pinMode(IN4, OUTPUT); pinMode(ENB, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
+  driveMotors(0, 0);
+
+  // Keep SPI chip selects HIGH (deselected) to prevent bus collision
+  pinMode(10, OUTPUT); digitalWrite(10, HIGH);
+  pinMode(SD_CS_PIN, OUTPUT); digitalWrite(SD_CS_PIN, HIGH);
+
+  Wire.begin();
+  if (mpu.begin() != 0) fatalBlink(2);        // 2 blinks = MPU6050 not found
+  delay(1000);
+  mpu.calcOffsets(true, true);                // keep robot still during boot
+  mpu.update();
+  headingOffsetDeg = mpu.getAngleZ();         // define "forward" as boot direction
+
+  sdOk = SD.begin(SD_CS_PIN) && openLog();    // robot still drives if SD fails
+
+  if (!radio.begin() || !radio.isChipConnected()) fatalBlink(3);  // 3 blinks = radio fault
+  radio.openReadingPipe(1, pipeAddress);
+  radio.setPALevel(RF24_PA_LOW);
+  radio.startListening();
+
+  lastUpdate = millis();
+  lastFlush = lastUpdate;
+}
+
+// ---------------- Main Loop ----------------
+void loop() {
+  unsigned long now = millis();
+  float dt = (now - lastUpdate) / 1000.0;
+  lastUpdate = now;
+
+  // 1. Update gyro/heading
+  mpu.update();
+  headingRad = HEADING_SIGN * (mpu.getAngleZ() - headingOffsetDeg) * DEG_TO_RAD;
+
+  // 2. Read ALL pending radio packets
+  while (radio.available()) {
+    radio.read(&rxData, sizeof(PacketData));
+    lastPacketTime = now;
+    gotFirstPacket = true;
+    ledOffTime = now + LED_PULSE_MS;          // pulse LED for this packet
+
+    // RIGHT BUTTON: reset home origin and log (rising edge)
+    if (rxData.rightButton && !lastRightBtn) {
+      driveMotors(0, 0);                      // stop before the slow SD operation
+      posX = 0.0;
+      posY = 0.0;
+      rthActive = false;
+      resetLog();
+    }
+
+    // LEFT BUTTON: toggle return-to-home (rising edge)
+    if (rxData.leftButton && !lastLeftBtn) {
+      rthActive = !rthActive;
+    }
+
+    lastRightBtn = rxData.rightButton;
+    lastLeftBtn = rxData.leftButton;
+  }
+
+  // 3. Link-loss failsafe: automatically return home
+  bool linkLost = gotFirstPacket && (now - lastPacketTime > LINK_TIMEOUT_MS);
+  if (linkLost && !rthActive && !failsafeTriggered) {
+    rthActive = true;
+    failsafeTriggered = true;
+  }
+  if (!linkLost) failsafeTriggered = false;
+
+  int leftCmd = 0;
+  int rightCmd = 0;
+
+  // 4. Drive mode selection
+  if (!rthActive) {
+    if (gotFirstPacket && !linkLost) {
+      leftCmd  = constrain(rxData.motorLeftSpeed,  -255, 255);
+      rightCmd = constrain(rxData.motorRightSpeed, -255, 255);
+      if (abs(leftCmd)  < DEADBAND) leftCmd  = 0;
+      if (abs(rightCmd) < DEADBAND) rightCmd = 0;
+    }
+    // else: no link yet / link lost and RTH already finished -> motors stay stopped
+  } else {
+    float distToHome = sqrt(posX * posX + posY * posY);
+
+    if (distToHome < ARRIVAL_RADIUS) {
+      leftCmd = 0;
+      rightCmd = 0;
+      rthActive = false;
+    } else {
+      float targetAngle = atan2(-posY, -posX);
+      float angleError = targetAngle - headingRad;
+      while (angleError > PI)  angleError -= 2 * PI;
+      while (angleError < -PI) angleError += 2 * PI;
+
+      if (fabs(angleError) > PIVOT_THRESHOLD) {
+        // Pivot in place toward home (positive error = turn left)
+        if (angleError > 0) { leftCmd = -PIVOT_SPEED; rightCmd =  PIVOT_SPEED; }
+        else                { leftCmd =  PIVOT_SPEED; rightCmd = -PIVOT_SPEED; }
+      } else {
+        // Roughly facing home: drive forward with proportional correction
+        int turnAdjust = constrain((int)(angleError * 120.0), -110, 110);
+        leftCmd  = constrain(RTH_BASE_SPEED - turnAdjust, -255, 255);
+        rightCmd = constrain(RTH_BASE_SPEED + turnAdjust, -255, 255);
+      }
+    }
+  }
+
+  // 5. Execute motor outputs
+  driveMotors(leftCmd, rightCmd);
+
+  // 6. Dead-reckoning (pivoting averages to ~0, so position doesn't drift while turning)
+  float avgThrottle = (leftCmd + rightCmd) / 2.0;
+  float velocity = avgThrottle * SPEED_SCALE;
+  posX += velocity * cos(headingRad) * dt;
+  posY += velocity * sin(headingRad) * dt;
+
+  // 7. Logging (file stays open; flush once per second)
+  if (sdOk && now - lastLog >= LOG_INTERVAL_MS) {
+    lastLog = now;
+    logFile.print(now);               logFile.print(',');
+    logFile.print(mpu.getAccX(), 3);  logFile.print(',');
+    logFile.print(mpu.getAccY(), 3);  logFile.print(',');
+    logFile.print(mpu.getAccZ(), 3);  logFile.print(',');
+    logFile.print(mpu.getGyroX(), 2); logFile.print(',');
+    logFile.print(mpu.getGyroY(), 2); logFile.print(',');
+    logFile.print(mpu.getGyroZ(), 2); logFile.print(',');
+    logFile.print(posX, 2);           logFile.print(',');
+    logFile.println(posY, 2);
+  }
+  if (sdOk && now - lastFlush >= FLUSH_INTERVAL_MS) {
+    lastFlush = now;
+    logFile.flush();
+  }
+
+  // 8. Activity LED
+  updateLed(now);
+}
+
+void driveMotors(int leftSpeed, int rightSpeed) {
+  // Left motor
+  if (leftSpeed > 0) {
+    digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);
+    analogWrite(ENA, leftSpeed);
+  } else if (leftSpeed < 0) {
+    digitalWrite(IN1, LOW); digitalWrite(IN2, HIGH);
+    analogWrite(ENA, abs(leftSpeed));
+  } else {
+    digitalWrite(IN1, LOW); digitalWrite(IN2, LOW);
+    analogWrite(ENA, 0);
+  }
+
+  // Right motor
+  if (rightSpeed > 0) {
+    digitalWrite(IN3, HIGH); digitalWrite(IN4, LOW);
+    analogWrite(ENB, rightSpeed);
+  } else if (rightSpeed < 0) {
+    digitalWrite(IN3, LOW); digitalWrite(IN4, HIGH);
+    analogWrite(ENB, abs(rightSpeed));
+  } else {
+    digitalWrite(IN3, LOW); digitalWrite(IN4, LOW);
+    analogWrite(ENB, 0);
+  }
+}
