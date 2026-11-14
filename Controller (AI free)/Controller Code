@@ -3,8 +3,8 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-#define CE_PIN 7
-#define CSN_PIN 8
+const int CE_PIN 7
+const int CSN_PIN 8
 
 RF24 radio(CE_PIN, CSN_PIN);
 
