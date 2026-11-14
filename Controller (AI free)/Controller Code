@@ -1,1 +1,69 @@
 
+#include <SPI.h> 
+#include <nRF24L01.h>
+#include <RF24.h>
+
+#define CE_PIN 7
+#define CSN_PIN 8
+
+RF24 radio(CE_PIN, CSN_PIN);
+
+const byte address[6] = "80085"; //[6] indicates the string length. It does not include the "/0" that is hidden at the end of the string.
+
+struct PacketData {
+  int motorLeftSpeed;
+  int motorRightSpeed;
+  bool leftButton;
+  bool rightButton;
+};
+
+PacketData txData; 
+
+const int leftButton = 0;
+const int rightButton = 1;
+
+
+
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+
+  if (!radio.begin()) {
+    Serial.println("Radio hardware error!");
+    while (1);
+  }
+
+  radio.openWritingPipe(address);
+  radio.setPALevel(RF24_PA_HIGH);
+  radio.stopListening();
+  
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  int rawLeft = analogRead(A0);
+  int rawRight = analogRead(A1);
+
+
+  int leftPower = map(rawLeft, 0, 1023, -255, 255);
+  int rightPower = map(rawRight, 0, 1023, -255, 255);
+
+  if (abs(leftPower) < 20) leftPower = 0;
+  if (abs(rightPower) < 20) rightPower = 0;
+
+
+  txData.motorLeftSpeed = leftPower;
+  txData.motorRightSpeed = rightPower;
+
+  txData.leftButton = (digitalRead(leftButton) == LOW);
+  txData.rightButton = (digitalRead(rightButton) == LOW);
+
+  radio.write(&txData, sizeof(PacketData));
+
+  delay(10);
+
+
+
+}
