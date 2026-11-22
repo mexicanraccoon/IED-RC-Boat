@@ -81,6 +81,7 @@ void loop() {
     tone(HORN_PIN, HORN_FREQ);
     if (lightOn == false) {
       digitalWrite(LED_PIN, HIGH);
+      lightOn = true;
     }
     if (lightOn == true) {
       lightOn = false;
