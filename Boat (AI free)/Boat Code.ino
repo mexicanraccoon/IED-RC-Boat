@@ -78,14 +78,16 @@ void loop() {
   }
 
   if (radio.available() == 0) {
-    tone(HORN_PIN, HORN_FREQ);
     if (lightOn == false) {
       digitalWrite(LED_PIN, HIGH);
+      tone(HORN_PIN, HORN_FREQ);
       lightOn = true;
     }
+    delay(500);
     if (lightOn == true) {
       lightOn = false;
       digitalWrite(LED_PIN, LOW);
+      noTone(HORN_PIN);
     }
     delay(500);
   }
