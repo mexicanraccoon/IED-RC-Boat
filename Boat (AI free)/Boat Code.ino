@@ -11,7 +11,7 @@ const int RESC_PIN = 6;
 
 const int LED_PIN = 11;
 
-const int HORN_PIN = 3;
+const int HORN_PIN = A0;
 int HORN_FREQ = 500;
 
 
