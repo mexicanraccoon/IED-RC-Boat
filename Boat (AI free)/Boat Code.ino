@@ -84,6 +84,7 @@ void loop() {
     }
     if (lightOn == true) {
       lightOn = false;
+      digitalWrite(LED_PIN, LOW);
     }
     delay(500);
   }
