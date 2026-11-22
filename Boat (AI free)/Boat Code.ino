@@ -9,7 +9,7 @@ const int CSN_PIN = 10;
 const int LESC_PIN = 5;
 const int RESC_PIN = 6;
 
-const int LED_PIN = 11;
+const int LED_PIN = 3;
 
 const int HORN_PIN = A0;
 int HORN_FREQ = 500;
