@@ -47,11 +47,11 @@ void loop() {
   int rawRight = analogRead(A1);
 
 
-  int leftPower = map(rawLeft, 0, 1023, -255, 255);
-  int rightPower = map(rawRight, 0, 1023, -255, 255);
+  int leftPower = map(rawLeft, 0, 1023, -180, 180);
+  int rightPower = map(rawRight, 0, 1023, -180, 180);
 
-  if (abs(leftPower) < 20) leftPower = 0;
-  if (abs(rightPower) < 20) rightPower = 0;
+  if (leftPower < 20) leftPower = 0;
+  if (rightPower < 20) rightPower = 0;
 
 
   txData.motorLeftSpeed = leftPower;
