@@ -1,4 +1,3 @@
-
 #include <SPI.h> 
 #include <nRF24L01.h>
 #include <RF24.h>
@@ -23,8 +22,6 @@ const int leftButton = 0;
 const int rightButton = 1;
 
 
-
-
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -37,7 +34,6 @@ void setup() {
   radio.openWritingPipe(address);
   radio.setPALevel(RF24_PA_HIGH);
   radio.stopListening();
-  
 }
 
 void loop() {
@@ -45,7 +41,6 @@ void loop() {
 
   int rawLeft = analogRead(A0);
   int rawRight = analogRead(A1);
-
 
   int leftPower = map(rawLeft, 0, 1023, -180, 180);
   int rightPower = map(rawRight, 0, 1023, -180, 180);
@@ -63,7 +58,4 @@ void loop() {
   radio.write(&txData, sizeof(PacketData));
 
   delay(10);
-
-
-
 }
