@@ -61,7 +61,7 @@ void setup() {
 
 void loop() {
 
-  if (radio.available() > 0) {
+  if (radio.available()) {
     radio.read(&rxData, sizeof(PacketData));
     int leftPower = rxData.motorLeftSpeed;
     int rightPower = rxData.motorRightSpeed;
@@ -82,8 +82,9 @@ void loop() {
     if (hornStatus == true) tone(HORN_PIN, HORN_FREQ);
     delay(10);
   }
-
-  if (radio.available() == 0) {
+  else {
+    RESC.write(0);
+    LESC.write(0);
     if (lightOn == false) {
       digitalWrite(LED_PIN, HIGH);
       tone(HORN_PIN, HORN_FREQ);
@@ -97,5 +98,4 @@ void loop() {
     }
     delay(500);
   }
-
 }
