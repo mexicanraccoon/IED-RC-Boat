@@ -34,12 +34,18 @@ Servo RESC;
 bool lightOn = false;
 
 void setup() {
-
+  Serial.begin(9600);
 
   pinMode(LED_PIN, OUTPUT);
   pinMode(HORN_PIN, OUTPUT);
 
   radio.begin();
+  
+  if (!radio.begin()) {
+    Serial.println("Radio hardware error!");
+    while (1);
+  }
+
   radio.setPALevel(RF24_PA_LOW);
   radio.setPayloadSize(sizeof(PacketData));
   radio.openReadingPipe(0, address);
