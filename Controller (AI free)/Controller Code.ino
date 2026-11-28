@@ -2,8 +2,8 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-const int CE_PIN 9
-const int CSN_PIN 10
+const int CE_PIN = 9;
+const int CSN_PIN = 10;
 
 RF24 radio(CE_PIN, CSN_PIN);
 
@@ -25,6 +25,7 @@ const int rightButton = 1;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  radio.begin();
 
   if (!radio.begin()) {
     Serial.println("Radio hardware error!");
